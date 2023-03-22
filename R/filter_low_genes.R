@@ -25,8 +25,10 @@
 #'
 #' @export
 #'
-filter_low_genes <- function(df, min_expr = 10,
-                             percent_cutoff = 90, metric = "units") {
+filter_low_genes <- function(df, 
+                             min_expr = 10,
+                             percent_cutoff = 90, 
+                             metric = "units") {
   if (is.character(rownames(df)) == F) {
     stop("Make sure rownames in dataframe are sample IDs.")
   }
