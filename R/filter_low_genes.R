@@ -31,8 +31,7 @@ filter_low_genes <- function(df,
                              metric = "units") {
   if (is.character(rownames(df)) == F) {
     stop("Make sure rownames in dataframe are sample IDs.")
-  }
-  else {
+  } else {
     samples_num <- nrow(df)
     dec_cutoff <- percent_cutoff/100
     df_t_orig <- df %>%
