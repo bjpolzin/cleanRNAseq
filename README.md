@@ -13,7 +13,7 @@ install_github("bjpolzin/cleanRNAseq")
 ```
 
 ## Usage
-### Arguments
+### Arguments for `filter_low_genes()`
 * `df`: expression data. A data frame in which columns are genes and rows are samples.
 
 * `min_expr`: minimum expression. The minimum value that a gene must be expressed across the percentage of samples selected. If no user input is provided the default is 10.
