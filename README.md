@@ -26,13 +26,16 @@ install_github("bjpolzin/cleanRNAseq")
 If you have the RNAseq dataframe `datExpr` of FPKM values and want to filter out genes with less than 5 FPKM in 60% of your samples, the function would be as follows:
 ```
 df_filtered -> filter_low_genes(datExpr, min_expr = 5, 
-                                 percent_cutoff = 90, metric = "FPKM")
+                                 percent_cutoff = 90, 
+                                 metric = "FPKM")
 ```
 
 `df_filtered` will contain your new dataframe, and a message in the console will say:
 
 ```
-ATTENTION: A total of 678 genes were removed. This was based on your parameters that stated a minimum of 5 FPKM must be in at least 90% (≥9) of the 10 samples provided.
+ATTENTION: A total of 678 genes were removed. This was based 
+on your parameters that stated a minimum of 5 FPKM must be in at 
+least 90% (≥9) of the 10 samples provided.
 ```
 
 ## Creator
