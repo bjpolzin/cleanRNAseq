@@ -25,9 +25,9 @@ relevant to your specific analysis. If no user input is provided the the
 default is "unit".}
 }
 \description{
-This function checks data for individual genes that express below a certain
-threshold across a given percentage of samples, filters them out, and returns
-a data frame with the genes that successfully met the user-provided criteria.
-Upon completion, a message summarizing how many genes were removed is also
-output.
+This function checks for and filters out low expressing genes in RNAseq
+expression data. Based on user input, the function returns an expression
+data frame that contains genes expressed above a minimum expression threshold
+across a certain percentage of samples. Upon completion, a message
+summarizing how many genes were removed is also output.
 }
