@@ -1,12 +1,19 @@
 Package: cleanRNAseq
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Filter low genes in RNAseq data
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author: Brandon Polzin
+Maintainer: Brandon Polzin <brandon.j.polzin@gmail.com>
+Description: This function checks for and filters out low expressing genes in 
+    RNAseq expression data. Based on user input, the function returns an 
+    expression data frame that contains genes expressed above a minimum expression 
+    threshold across a certain percentage of samples. Upon completion, a message 
+    summarizing how many genes were removed is also output.
+Imports:
+    dplyr
+    glue
+    magrittr
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.3
