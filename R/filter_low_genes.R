@@ -25,46 +25,64 @@
 #'
 #' @export
 #'
-filter_low_genes <- function(df, 
-                             min_expr = 10,
-                             percent_cutoff = 90, 
-                             metric = "units") {
-  if (is.character(rownames(df)) == F) {
+# Check if rownames are sample IDs
+check_rownames <- function(df) {
+  if (!is.character(rownames(df))) {
     stop("Make sure rownames in dataframe are sample IDs.")
-  } else {
-    samples_num <- nrow(df)
-    dec_cutoff <- percent_cutoff/100
-    df_t_orig <- df %>%
-      t() %>%
-      as.data.frame()
-    df_t <- df_t_orig
-    df_t$samples_w_min_expr <- rowSums(df_t >= min_expr)
-    cutoff <- dec_cutoff * samples_num
-    rounded_cutoff <- ceiling(cutoff)
-    df_t_filt <- df_t %>%
-      dplyr::filter(samples_w_min_expr >= rounded_cutoff)
-    number_of_rm_genes <- nrow(df_t) - nrow(df_t_filt)
-    df_t_filt_final <- df_t_filt %>%
-      dplyr::select(-samples_w_min_expr)
-    df_filt <- df_t_filt_final %>%
-      t() %>%
-      as.data.frame()
-    all_gene_cols <- colnames(df_filt)
-    df_filt_final <- df_filt %>%
-      dplyr::mutate(across(all_of(all_gene_cols), as.numeric)) # convert to numeric
-    message("ATTENTION: A total of ",
-            number_of_rm_genes,
-            " genes were removed. This was based on your parameters that stated a minimum of ",
-            min_expr,
-            " ",
-            metric,
-            " must be in at least ",
-            percent_cutoff,
-            "% (≥",
-            rounded_cutoff,
-            ") of the ",
-            samples_num,
-            " samples provided.")
-return(df_filt_final)
-    }
+  }
+}
+
+# Calculate the rounded cutoff
+get_rounded_cutoff <- function(samples_num, percent_cutoff) {
+  dec_cutoff <- percent_cutoff / 100
+  sample_cutoff <- dec_cutoff * samples_num
+  result <- sample_cutoff %>%
+    ceiling()
+  return(result)
+}
+
+# Remove genes based on the given parameters
+remove_low_genes <- function(df_t, min_expr, rounded_cutoff) {
+  result <- df_t %>%
+    dplyr::mutate(samples_w_min_expr = rowSums(. >= min_expr)) %>%
+    dplyr::filter(samples_w_min_expr >= rounded_cutoff) %>%
+    dplyr::select(-samples_w_min_expr)
+  return(result)
+}
+
+# Print the message with removed genes count
+print_message <- function(removed_genes_count, min_expr, metric, percent_cutoff, rounded_cutoff, samples_num) {
+  message_text <- glue::glue("ATTENTION: A total of {removed_genes_count} genes were removed. ",
+                             "This was based on your parameters that stated a minimum of {min_expr} {metric} ",
+                             "must be in at least {percent_cutoff}% (≥{rounded_cutoff}) ",
+                             "of the {samples_num} samples provided.")
+
+  wrapped_message <- strwrap(message_text, width = getOption("width"))
+  message(cat(wrapped_message, sep = "\n"))
+}
+
+filter_low_genes <- function(df,
+                             min_expr = 10,
+                             percent_cutoff = 90,
+                             metric = "units") {
+  check_rownames(df)
+
+  samples_num <- nrow(df)
+  rounded_cutoff <- get_rounded_cutoff(samples_num, percent_cutoff)
+
+  df_t <- df %>% t() %>% as.data.frame()
+
+  df_t_filt <- df_t %>%
+    remove_low_genes(min_expr, rounded_cutoff)
+
+  number_of_rm_genes <- nrow(df_t) - nrow(df_t_filt)
+
+  df_filt_final <- df_t_filt %>%
+    t() %>%
+    as.data.frame() %>%
+    mutate(across(everything(), as.numeric)) # convert to numeric
+
+  print_message(number_of_rm_genes, min_expr, metric, percent_cutoff, rounded_cutoff, samples_num)
+
+  return(df_filt_final)
 }
