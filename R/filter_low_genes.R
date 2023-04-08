@@ -28,7 +28,7 @@
 # Check if rownames are sample IDs
 check_rownames <- function(df) {
   if (!is.character(rownames(df))) {
-    stop("Make sure rownames in dataframe are sample IDs.")
+    stop("Make sure rownames in dataframe are unique sample IDs.")
   }
 }
 
